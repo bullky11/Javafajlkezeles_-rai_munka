@@ -1,12 +1,15 @@
-package progtetelek;
+package adatszerkezetek;
 
+import progtetelek.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.List;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.HashSet;
 
 public class FileesAdatszerkezetek {
 
@@ -39,8 +42,7 @@ public class FileesAdatszerkezetek {
         feladatok6();
         feladatok7();
         feladatok8();
-        
-        
+
     }
 
     private void feladat1() throws IOException {
@@ -83,40 +85,64 @@ public class FileesAdatszerkezetek {
 
     private void feladatok5() {
         System.out.println("borravalók átlaga");
-        double osszeg=0;
+        double osszeg = 0;
         for (int i = 0; i < fuvarok.length; i++) {
-            osszeg+=fuvarok[i].getBorravalo();
+            osszeg += fuvarok[i].getBorravalo();
         }
         Locale loc = Locale.ENGLISH;
-        System.out.printf(loc,"%.2f \n ", osszeg/fuvarok.length);
+        System.out.printf(loc, "%.2f \n ", osszeg / fuvarok.length);
     }
 
     private void feladatok6() {
         System.out.println("6.feladat minden fizetés bankkártyás");
-        int i=0, N=fuvarok.length;
-        while (i < N && fuvarok[i].getFizetes_modja().equals("bankkártya")) {            
+        int i = 0, N = fuvarok.length;
+        while (i < N && fuvarok[i].getFizetes_modja().equals("bankkártya")) {
             i++;
         }
-        boolean mind= i>N;
-        System.out.println(mind +" index:  "+i+" "+fuvarok[i].getFizetes_modja());
+        boolean mind = i > N;
+        System.out.println(mind + " index:  " + i + " " + fuvarok[i].getFizetes_modja());
     }
 
     private void feladatok7() {
         System.out.println("7.feladat minden készpénzes fizetésnél és 0 ás borravaló");
-        int i=0, N=fuvarok.length;
-          while (i < N && kpNullaBorravaloval(fuvarok[i])) {            
+        int i = 0, N = fuvarok.length;
+        while (i < N && kpNullaBorravaloval(fuvarok[i])) {
             i++;
         }
     }
-    private boolean kpNullaBorravaloval(Fuvar fuvar){
-        boolean kp =fuvar.getFizetes_modja().equals("készpénz");
-        boolean borravaloNulla=fuvar.getBorravalo()==0;
+
+    private boolean kpNullaBorravaloval(Fuvar fuvar) {
+        boolean kp = fuvar.getFizetes_modja().equals("készpénz");
+        boolean borravaloNulla = fuvar.getBorravalo() == 0;
         return kp && borravaloNulla;
     }
 
-    private void feladatok8() {
+    private void feladatok8() throws IOException {
         System.out.println("8.feladat: problémás kérdések");
         System.out.println("készpénzes fuvarok listája,konzolon és fájlban");
-        
+        List<Fuvar> kpFuvarok = new ArrayList<>();//mérete jelenleg 0 
+        int i = 0;
+        for (Fuvar fuvar : fuvarok) {
+            if (fuvar.getFizetes_modja().equals("készpénz")) {
+                kpFuvarok.add(fuvar);
+            }
+        }
+
+        assert kpFuvarok.size() > 0 : "üres a listaa";
+        String kimenet = "";
+        for (Fuvar fuvar : kpFuvarok) {
+            kimenet += fuvar + "\n";
+
+        }
+        Files.writeString(Path.of("teszt.txt"), kimenet);
+        System.out.println("--milyen fizetési módok vanak rögzítve?");
+        HashSet<String> fizmodok = new HashSet<>();
+        for (Fuvar fuvar : fuvarok) {
+            fizmodok.add(fuvar.getFizetes_modja());
+        }
+        for (String fizmod : fizmodok) {
+            System.out.println(fizmod);
+        }
+
     }
 }
