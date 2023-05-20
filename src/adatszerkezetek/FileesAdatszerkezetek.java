@@ -8,8 +8,10 @@ import java.text.ParseException;
 import java.util.List;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.HashSet;
+import java.util.Map;
 
 public class FileesAdatszerkezetek {
 
@@ -143,6 +145,31 @@ public class FileesAdatszerkezetek {
         for (String fizmod : fizmodok) {
             System.out.println(fizmod);
         }
+        //asszociációs tömg kulcsérték párokkal dolgozik [kulcs]=érték : HashMap
+        System.out.println("melyik fizmodbol menniy volt?");
+        //ide csak referenciatipusokat tudok beirni
+        Map<String,Integer> fizModDb=new HashMap<>();
+        for (Fuvar fuvar : fuvarok) {
+            String kulcs =fuvar.getFizetes_modja();
+            if(fizModDb.containsKey(kulcs)){
+               int ertek= fizModDb.get(kulcs);
+               fizModDb.put(kulcs, ++ertek);
+               
+            }else{
+                fizModDb.put(kulcs, 1);
+            }
+            assert fizModDb.get("bankkártya")>0 : "nem jó a MAP";
+           // assert fizModDb.get("készpénz")==kpFuvarok.size() : "kp-->hibás MAP";
+            //form-->tab
+            for (Map.Entry<String, Integer> entry : fizModDb.entrySet()) {
+                String key = entry.getKey();
+                Integer value = entry.getValue();
+                System.out.printf("%s: %d db \n",key,value);
+                
+            }
+        }
+        
+       
 
     }
 }
